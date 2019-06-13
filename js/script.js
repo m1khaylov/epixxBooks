@@ -1,40 +1,54 @@
 ready(function(){
 
   // В этом месте должен быть написан ваш код
+  
+  function toggleMobileMenu() {
+    document.querySelector('.burger').addEventListener('click', function() {
+      document.querySelector('#nav').classList.toggle('main-nav--open');
+      document.querySelector('.main-nav__toggler').classList.toggle('burger--close');
+    });
+  }
+  toggleMobileMenu();
+  
+  function toggleFiltersMenu() {
+    document.querySelector('#filters-trigger').addEventListener('click', function() {
+    document.querySelector('#filters').classList.toggle('filters--open');
+      });
+  }
+  toggleFiltersMenu();
 
-  document.querySelector('.burger').addEventListener('click', function() {
-    document.querySelector('#nav').classList.toggle('main-nav--open');
-    document.querySelector('.main-nav__toggler').classList.toggle('burger--close');
+  function openPopup() {
+    document.querySelector('.catalog__books-list').addEventListener('click', function() {
+    document.querySelector('#modal-book-view').classList.toggle('modal--open');
+    document.querySelector('.page').classList.toggle('js-modal-open');
+      });
+  }
+  openPopup();
+
+  function closePopup() {
+    document.querySelector('.modal__close').addEventListener('click', function() {
+      document.querySelector('#modal-book-view').classList.toggle('modal--open');
+      document.querySelector('.page').classList.toggle('js-modal-open');
+      });
+  }
+  closePopup();
+
+  books.forEach(function(item) {
+    `<article class="card">
+                <a class="card__inner" href="index.html#klienty-na-vsyu-zhizn">
+                  <img class="card__img" src="img/klienty-na-vsyu-zhizn.jpg" width="148" height="208" alt="Клиенты на всю жизнь"/>
+                  <h2 class="card__title">Клиенты на всю жизнь</h2>
+                  <span class="card__new">new</span>
+                  <p class="card__price">697 ₽</p>
+                </a>
+                <button class="btn  btn--sm card__buy">
+                  <svg class="btn__icon" width="14" height="14">
+                    <use xlink:href="#plus"></use>
+                  </svg>
+                  <span>В корзину</span>
+                </button>
+              </article>`
   });
-
-//   document.querySelector('#nav').classList.toggle('main-nav--open');
-// document.querySelector('.burger').addEventListener('click', function() {
-// document.querySelector('.burger').classList.toggle('burger--close');
-// })
-
-// раскрывает/закрывает вкладку фильтры при клике.
-document.querySelector('#filters-trigger').addEventListener('click', function() {
-document.querySelector('#filters').classList.toggle('filters--open');
-})
-
-// при клике на карточку открывает модульное окно.
-document.querySelector('.catalog__books-list').addEventListener('click', function() {
-document.querySelector('#modal-book-view').classList.toggle('modal--open');
-document.querySelector('.page').classList.toggle('js-modal-open');
-})
-// закрывает модульное окно при нажатие на крестик.
-document.querySelector('.modal__close').addEventListener('click', function() {
-document.querySelector('#modal-book-view').classList.toggle('modal--open');
-document.querySelector('.page').classList.toggle('js-modal-open');
-})
-
-let allCards = document.querySelectorAll('.card');
-allCards.forEach(function(card) {
-  let eachCard = card;
-  eachCard.addEventListener('click', function() {
-    console.log('clicked');
-  })
-})
 
   
 
