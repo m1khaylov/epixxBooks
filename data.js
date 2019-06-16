@@ -4,7 +4,8 @@ const books = [
     "desc":"",
     "price":697,
     "uri":"klienty-na-vsyu-zhizn",
-    "type":"marketing"
+    "type":"marketing",
+    "new": true
   },
   {
     "name":"Ценные решения",
@@ -25,7 +26,8 @@ const books = [
     "desc":"Как рисовать животных, птиц, растения и пейзажи",
     "price":1695,
     "uri":"dnevnik-khudozhnika-naturalista",
-    "type":"creativity"
+    "type":"creativity",
+    "new": true
   },
   {
     "name":"Открытое мышление",

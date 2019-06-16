@@ -1,115 +1,166 @@
-ready(function(){
+ready(function () {
+    // В этом месте должен быть написан ваш код
 
-  // В этом месте должен быть написан ваш код
-  
-  function toggleMobileMenu() {
-    document.querySelector('.burger').addEventListener('click', function() {
-      document.querySelector('#nav').classList.toggle('main-nav--open');
-      document.querySelector('.main-nav__toggler').classList.toggle('burger--close');
+    function select(selector) {
+        return document.querySelector(selector);
+    }
+
+    function toggleMobileMenu() {
+        select('.burger').addEventListener('click', function () {
+            select('#nav').classList.toggle('main-nav--open');
+            select('.main-nav__toggler').classList.toggle('burger--close');
+        });
+    }
+    toggleMobileMenu();
+
+    function toggleFiltersMenu() {
+        select('#filters-trigger').addEventListener('click', function () {
+            select('#filters').classList.toggle('filters--open');
+        });
+    }
+    toggleFiltersMenu();
+
+    function createCards(arr) {
+        const catalog = select('.catalog__books-list');
+        const cardTemplate = select('.card-template');
+        const cardFragment = document.createDocumentFragment();
+
+        arr.forEach(book => {
+            const newCard = cardTemplate.content.cloneNode(true);
+            newCard.querySelector('.card__inner').setAttribute('data-id', book.uri);
+            newCard.querySelector('.card__title').textContent = book.name;
+            newCard.querySelector('.card__price').textContent = `${book.price} ₽`;
+            newCard.querySelector('.card__img').setAttribute('src', `img/${book.uri}.jpg`);
+            newCard.querySelector('.card__img').setAttribute('alt', book.name);
+
+            if (book.new == true) {
+                let newBook = document.createElement('span');
+                newBook.classList.add('card__new');
+                newBook.textContent = 'new';
+                newCard.querySelector('.card__title').appendChild(newBook);
+            }
+
+            cardFragment.appendChild(newCard);
+            catalog.appendChild(cardFragment);
+        })
+    }
+    createCards(books);
+
+    function createPopup(bookId) {
+        const selectedBook = books.find(book => book.uri === bookId);
+        select('.modal__content .popup__img').setAttribute('src', `img/${selectedBook.uri}.jpg`);
+        select('.modal__content .popup__img').setAttribute('alt', selectedBook.name);
+        select('.modal__content .product__title').textContent = selectedBook.name;
+        select('.modal__content .product__descr p').textContent = selectedBook.desc;
+        select('.modal__content .btn--price .price').textContent = `${selectedBook.price} ₽`;
+
+        select('#modal-book-view').classList.add('modal--open');
+        select('.page').classList.add('js-modal-open');
+
+    }
+
+    function openPopup() {
+        document.querySelectorAll('.card__inner').forEach(card => {
+            card.addEventListener('click', function (e) {
+                const bookId = this.getAttribute('data-id');
+                createPopup(bookId);
+                e.preventDefault();
+            });
+        });
+    }
+    openPopup();
+
+    function closePopup() {
+        select('.modal__close').addEventListener('click', function (e) {
+            select('#modal-book-view').classList.remove('modal--open');
+            select('.page').classList.remove('js-modal-open');
+        });
+    }
+    closePopup();
+
+    function getFilteredBooks(type) {
+        return books.filter(book => book.type === type);
+    }
+
+    function bookFilter() {
+        document.querySelectorAll('.tabs__item').forEach(filter => {
+            filter.addEventListener('click', function (e) {
+                const catalog = document.querySelector('.catalog__books-list');
+                catalog.innerHTML = '';
+                const type = this.getAttribute('data-id');
+                const books = getFilteredBooks(type);
+                createCards(books);
+                e.preventDefault();
+            });
+        });
+    }
+   bookFilter();
+
+   let cart = [];
+   select('.btn--price').addEventListener('click', function() {
+       cart.push
+   })
+
+
+    // ВНИМАНИЕ!
+    // Нижеследующий код (кастомный селект и выбор диапазона цены) работает
+    // корректно и не вызывает ошибок в консоли браузера только на главной.
+    // Одна из ваших задач: сделать так, чтобы на странице корзины в консоли
+    // браузера не было ошибок.
+
+    // Кастомные селекты (кроме выбора языка)
+    new Choices('.field-select:not(#lang) select.field-select__select', {
+        searchEnabled: false,
+        shouldSort: false,
     });
-  }
-  toggleMobileMenu();
-  
-  function toggleFiltersMenu() {
-    document.querySelector('#filters-trigger').addEventListener('click', function() {
-    document.querySelector('#filters').classList.toggle('filters--open');
-      });
-  }
-  toggleFiltersMenu();
-
-  function openPopup() {
-    document.querySelector('.catalog__books-list').addEventListener('click', function() {
-    document.querySelector('#modal-book-view').classList.toggle('modal--open');
-    document.querySelector('.page').classList.toggle('js-modal-open');
-      });
-  }
-  openPopup();
-
-  function closePopup() {
-    document.querySelector('.modal__close').addEventListener('click', function() {
-      document.querySelector('#modal-book-view').classList.toggle('modal--open');
-      document.querySelector('.page').classList.toggle('js-modal-open');
-      });
-  }
-  closePopup();
-
-  books.forEach(function(item) {
-    `<article class="card">
-                <a class="card__inner" href="index.html#klienty-na-vsyu-zhizn">
-                  <img class="card__img" src="img/klienty-na-vsyu-zhizn.jpg" width="148" height="208" alt="Клиенты на всю жизнь"/>
-                  <h2 class="card__title">Клиенты на всю жизнь</h2>
-                  <span class="card__new">new</span>
-                  <p class="card__price">697 ₽</p>
-                </a>
-                <button class="btn  btn--sm card__buy">
-                  <svg class="btn__icon" width="14" height="14">
-                    <use xlink:href="#plus"></use>
-                  </svg>
-                  <span>В корзину</span>
-                </button>
-              </article>`
-  });
-
-  
-
-  // ВНИМАНИЕ!
-  // Нижеследующий код (кастомный селект и выбор диапазона цены) работает
-  // корректно и не вызывает ошибок в консоли браузера только на главной.
-  // Одна из ваших задач: сделать так, чтобы на странице корзины в консоли
-  // браузера не было ошибок.
-
-  // Кастомные селекты (кроме выбора языка)
-  new Choices('.field-select:not(#lang) select.field-select__select', {
-    searchEnabled: false,
-    shouldSort: false,
-  });
-  // Кастомный селект выбора языка отдельно
-  new Choices('#lang select.field-select__select', {
-    searchEnabled: false,
-    shouldSort: false,
-    callbackOnCreateTemplates: function (template) {
-      return {
-        item: (classNames, data) => {
-          return template(`
+    // Кастомный селект выбора языка отдельно
+    new Choices('#lang select.field-select__select', {
+        searchEnabled: false,
+        shouldSort: false,
+        callbackOnCreateTemplates: function (template) {
+            return {
+                item: (classNames, data) => {
+                    return template(`
             <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}>
               ${getLangInSelectIcon(data.value)} ${data.label.substr(0,3)}
             </div>
           `);
-        },
-        choice: (classNames, data) => {
-          return template(`
+                },
+                choice: (classNames, data) => {
+                    return template(`
             <div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${this.config.itemSelectText}" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable'} data-id="${data.id}" data-value="${data.value}" ${data.groupId > 0 ? 'role="treeitem"' : 'role="option"'}>
               ${getLangInSelectIcon(data.value)} ${data.label}
             </div>
           `);
-        },
-      };
-    }
-  });
-  function getLangInSelectIcon(value) {
-    if (value == 'ru') return '<span class="field-select__lang-ru"></span>';
-    else if (value == 'en') return '<span class="field-select__lang-en"></span>';
-    return '<span class="field-select__lang-null"></span>';
-  }
+                },
+            };
+        }
+    });
 
-  // Выбор диапазона цен
-  var slider = document.getElementById('price-range');
-  noUiSlider.create(slider, {
-    start: [400, 1000],
-    connect: true,
-    step: 100,
-    range: {
-      'min': 200,
-      'max': 2000
+    function getLangInSelectIcon(value) {
+        if (value == 'ru') return '<span class="field-select__lang-ru"></span>';
+        else if (value == 'en') return '<span class="field-select__lang-en"></span>';
+        return '<span class="field-select__lang-null"></span>';
     }
-  });
+
+    // Выбор диапазона цен
+    var slider = document.getElementById('price-range');
+    noUiSlider.create(slider, {
+        start: [400, 1000],
+        connect: true,
+        step: 100,
+        range: {
+            'min': 200,
+            'max': 2000
+        }
+    });
 
 });
 
-function ready (fn) {
-  if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading'){
-    fn();
-  } else {
-    document.addEventListener('DOMContentLoaded', fn);
-  }
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading') {
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
 }
