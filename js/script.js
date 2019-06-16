@@ -1,6 +1,10 @@
 ready(function () {
     // В этом месте должен быть написан ваш код
 
+    fetch('https://books.marinintim.com/books').then(r => r.json().then((response) => {
+        init(response);
+    }));
+
     function select(selector) {
         return document.querySelector(selector);
     }
@@ -11,14 +15,14 @@ ready(function () {
             select('.main-nav__toggler').classList.toggle('burger--close');
         });
     }
-    toggleMobileMenu();
+    
 
     function toggleFiltersMenu() {
         select('#filters-trigger').addEventListener('click', function () {
             select('#filters').classList.toggle('filters--open');
         });
     }
-    toggleFiltersMenu();
+ 
 
     function createCards(arr) {
         const catalog = select('.catalog__books-list');
@@ -27,13 +31,14 @@ ready(function () {
 
         arr.forEach(book => {
             const newCard = cardTemplate.content.cloneNode(true);
-            newCard.querySelector('.card__inner').setAttribute('data-id', book.uri);
+            newCard.querySelector('.card__inner').setAttribute('data-id', book.id);
             newCard.querySelector('.card__title').textContent = book.name;
             newCard.querySelector('.card__price').textContent = `${book.price} ₽`;
-            newCard.querySelector('.card__img').setAttribute('src', `img/${book.uri}.jpg`);
+            const imgSrc = book.thumb_url.substr(1);
+            newCard.querySelector('.card__img').setAttribute('src', `${imgSrc}.jpg`);
             newCard.querySelector('.card__img').setAttribute('alt', book.name);
 
-            if (book.new == true) {
+            if (book.new) {
                 let newBook = document.createElement('span');
                 newBook.classList.add('card__new');
                 newBook.textContent = 'new';
@@ -44,11 +49,12 @@ ready(function () {
             catalog.appendChild(cardFragment);
         })
     }
-    createCards(books);
+   
 
-    function createPopup(bookId) {
-        const selectedBook = books.find(book => book.uri === bookId);
-        select('.modal__content .popup__img').setAttribute('src', `img/${selectedBook.uri}.jpg`);
+    function createPopup(books, bookId) {
+        const selectedBook = books.find(book => book.id === bookId);
+        const imgSrc = selectedBook.thumb_url.substr(1);
+        select('.modal__content .popup__img').setAttribute('src', `${imgSrc}.jpg`);
         select('.modal__content .popup__img').setAttribute('alt', selectedBook.name);
         select('.modal__content .product__title').textContent = selectedBook.name;
         select('.modal__content .product__descr p').textContent = selectedBook.desc;
@@ -59,16 +65,16 @@ ready(function () {
 
     }
 
-    function openPopup() {
+    function openPopup(books) {
         document.querySelectorAll('.card__inner').forEach(card => {
             card.addEventListener('click', function (e) {
                 const bookId = this.getAttribute('data-id');
-                createPopup(bookId);
                 e.preventDefault();
+                createPopup(books, bookId);      
             });
         });
     }
-    openPopup();
+
 
     function closePopup() {
         select('.modal__close').addEventListener('click', function (e) {
@@ -76,31 +82,40 @@ ready(function () {
             select('.page').classList.remove('js-modal-open');
         });
     }
-    closePopup();
 
-    function getFilteredBooks(type) {
+
+    function getFilteredBooks(type, books) {
         return books.filter(book => book.type === type);
     }
 
-    function bookFilter() {
+    function bookFilter(books) {
         document.querySelectorAll('.tabs__item').forEach(filter => {
             filter.addEventListener('click', function (e) {
                 const catalog = document.querySelector('.catalog__books-list');
                 catalog.innerHTML = '';
                 const type = this.getAttribute('data-id');
-                const books = getFilteredBooks(type);
-                createCards(books);
+                const filteredBooks = getFilteredBooks(type, books);
+                createCards(filteredBooks);
                 e.preventDefault();
             });
         });
     }
-   bookFilter();
 
    let cart = [];
    select('.btn--price').addEventListener('click', function() {
-       cart.push
-   })
+       cart.push();
+   });
 
+
+
+   function init(books) {
+    createCards(books);
+    openPopup(books);
+    bookFilter(books);
+    closePopup();
+    toggleFiltersMenu();
+    toggleMobileMenu();
+   }
 
     // ВНИМАНИЕ!
     // Нижеследующий код (кастомный селект и выбор диапазона цены) работает
