@@ -10,19 +10,19 @@ ready(function () {
     }
 
     function toggleMobileMenu() {
-        select('.burger').addEventListener('click', function () {
+        querySelectorAll('.burger').addEventListener('click', function () {
             select('#nav').classList.toggle('main-nav--open');
             select('.main-nav__toggler').classList.toggle('burger--close');
         });
     }
-    
+
 
     function toggleFiltersMenu() {
         select('#filters-trigger').addEventListener('click', function () {
             select('#filters').classList.toggle('filters--open');
         });
     }
- 
+
 
     function createCards(arr) {
         const catalog = select('.catalog__books-list');
@@ -49,7 +49,7 @@ ready(function () {
             catalog.appendChild(cardFragment);
         })
     }
-   
+
 
     function createPopup(books, bookId) {
         const selectedBook = books.find(book => book.id === bookId);
@@ -70,7 +70,7 @@ ready(function () {
             card.addEventListener('click', function (e) {
                 const bookId = this.getAttribute('data-id');
                 e.preventDefault();
-                createPopup(books, bookId);      
+                createPopup(books, bookId);
             });
         });
     }
@@ -97,25 +97,69 @@ ready(function () {
                 const filteredBooks = getFilteredBooks(type, books);
                 createCards(filteredBooks);
                 e.preventDefault();
+                openPopup(books);
             });
         });
     }
 
-   let cart = [];
-   select('.btn--price').addEventListener('click', function() {
-       cart.push();
-   });
+    let cart = [];
+    //    select('.btn--price').addEventListener('click', function() {
+    //        cart.push();
+    //    });
+
+    function removeCartItemButtons() {
+        let removeCartItemButtons = document.querySelectorAll('.cart__product-del-btn');
+        removeCartItemButtons.forEach(button => {
+            button.addEventListener('click', removeCartItem)
+        })
+        let quantityInputs = document.querySelectorAll('.field-num__input');
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', quantityChanged);
+        })
+    }
+    removeCartItemButtons();
+
+    let addToCartButtons = document.querySelectorAll('.card__buy');
+    console.log(addToCartButtons);
+
+    function quantityChanged(event) {
+        let input = event.target;
+        if (isNaN(input.value) || input.value <= 0) {
+            input.value = 1;
+        }
+        updateCartTotal();
+    }
+    
+    function removeCartItem(event) {
+        let buttonClicked = event.target;
+        buttonClicked.parentElement.parentElement.remove();
+        updateCartTotal();
+    }
+
+    function updateCartTotal() {
+        let cartItemContainer = document.querySelector('.cart__table');
+        let cartRows = cartItemContainer.querySelectorAll('.cart__product');
+        let total = 0;
+        cartRows.forEach(cartRow => {
+            let priceElement = cartRow.querySelector('.cart__item-price');
+            let quantityElement = cartRow.querySelector('.field-num__input');
+            console.log(quantityElement, priceElement);
+            let price = parseFloat(priceElement.innerText.replace('₽', '').replace(' ', ''));
+            let quantity = quantityElement.value;
+            total = total + (price * quantity);
+        })
+        document.querySelector('#cart-products-price-num').innerText = `${total} ₽`;
+    }
 
 
-
-   function init(books) {
-    createCards(books);
-    openPopup(books);
-    bookFilter(books);
-    closePopup();
-    toggleFiltersMenu();
-    toggleMobileMenu();
-   }
+    function init(books) {
+        createCards(books);
+        openPopup(books);
+        bookFilter(books);
+        closePopup();
+        toggleFiltersMenu();
+        toggleMobileMenu();
+    }
 
     // ВНИМАНИЕ!
     // Нижеследующий код (кастомный селект и выбор диапазона цены) работает
