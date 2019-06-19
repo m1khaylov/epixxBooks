@@ -10,7 +10,7 @@ ready(function () {
     }
 
     function toggleMobileMenu() {
-        querySelectorAll('.burger').addEventListener('click', function () {
+        document.querySelector('.burger').addEventListener('click', function () {
             select('#nav').classList.toggle('main-nav--open');
             select('.main-nav__toggler').classList.toggle('burger--close');
         });
@@ -119,8 +119,8 @@ ready(function () {
     }
     removeCartItemButtons();
 
-    let addToCartButtons = document.querySelectorAll('.card__buy');
-    console.log(addToCartButtons);
+    // let addToCartButtons = document.querySelectorAll('.data-id');
+
 
     function quantityChanged(event) {
         let input = event.target;
@@ -129,7 +129,23 @@ ready(function () {
         }
         updateCartTotal();
     }
-    
+
+    let buttonMinus = document.querySelectorAll('.field-num__btn-minus');
+    buttonMinus.forEach(button => {
+        button.addEventListener('click', function (e) {
+            --e.target.parentElement.querySelector('.field-num__input').value;
+            updateCartTotal();
+        })
+    })
+
+    let buttonPlus = document.querySelectorAll('.field-num__btn-plus');
+    buttonPlus.forEach(button => {
+        button.addEventListener('click', function (e) {
+            ++e.target.parentElement.querySelector('.field-num__input').value;
+            updateCartTotal();
+        })
+    })
+
     function removeCartItem(event) {
         let buttonClicked = event.target;
         buttonClicked.parentElement.parentElement.remove();
@@ -143,7 +159,6 @@ ready(function () {
         cartRows.forEach(cartRow => {
             let priceElement = cartRow.querySelector('.cart__item-price');
             let quantityElement = cartRow.querySelector('.field-num__input');
-            console.log(quantityElement, priceElement);
             let price = parseFloat(priceElement.innerText.replace('₽', '').replace(' ', ''));
             let quantity = quantityElement.value;
             total = total + (price * quantity);
