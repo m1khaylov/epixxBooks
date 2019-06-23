@@ -16,13 +16,11 @@ ready(function () {
         });
     }
 
-
     function toggleFiltersMenu() {
         select('#filters-trigger').addEventListener('click', function () {
             select('#filters').classList.toggle('filters--open');
         });
     }
-
 
     function createCards(arr) {
         const catalog = select('.catalog__books-list');
@@ -37,6 +35,8 @@ ready(function () {
             const imgSrc = book.thumb_url.substr(1);
             newCard.querySelector('.card__img').setAttribute('src', `${imgSrc}.jpg`);
             newCard.querySelector('.card__img').setAttribute('alt', book.name);
+            newCard.querySelector('.card__buy').setAttribute('data-id', book.id);
+
 
             if (book.new) {
                 let newBook = document.createElement('span');
@@ -50,7 +50,6 @@ ready(function () {
         })
     }
 
-
     function createPopup(books, bookId) {
         const selectedBook = books.find(book => book.id === bookId);
         const imgSrc = selectedBook.thumb_url.substr(1);
@@ -59,6 +58,7 @@ ready(function () {
         select('.modal__content .product__title').textContent = selectedBook.name;
         select('.modal__content .product__descr p').textContent = selectedBook.desc;
         select('.modal__content .btn--price .price').textContent = `${selectedBook.price} ₽`;
+        select('.modal__content .btn--price').setAttribute('data-id', selectedBook.id);
 
         select('#modal-book-view').classList.add('modal--open');
         select('.page').classList.add('js-modal-open');
@@ -102,71 +102,7 @@ ready(function () {
         });
     }
 
-    let cart = [];
-    //    select('.btn--price').addEventListener('click', function() {
-    //        cart.push();
-    //    });
-
-    function removeCartItemButtons() {
-        let removeCartItemButtons = document.querySelectorAll('.cart__product-del-btn');
-        removeCartItemButtons.forEach(button => {
-            button.addEventListener('click', removeCartItem)
-        })
-        let quantityInputs = document.querySelectorAll('.field-num__input');
-        quantityInputs.forEach(input => {
-            input.addEventListener('change', quantityChanged);
-        })
-    }
-    removeCartItemButtons();
-
-    // let addToCartButtons = document.querySelectorAll('.data-id');
-
-
-    function quantityChanged(event) {
-        let input = event.target;
-        if (isNaN(input.value) || input.value <= 0) {
-            input.value = 1;
-        }
-        updateCartTotal();
-    }
-
-    let buttonMinus = document.querySelectorAll('.field-num__btn-minus');
-    buttonMinus.forEach(button => {
-        button.addEventListener('click', function (e) {
-            --e.target.parentElement.querySelector('.field-num__input').value;
-            updateCartTotal();
-        })
-    })
-
-    let buttonPlus = document.querySelectorAll('.field-num__btn-plus');
-    buttonPlus.forEach(button => {
-        button.addEventListener('click', function (e) {
-            ++e.target.parentElement.querySelector('.field-num__input').value;
-            updateCartTotal();
-        })
-    })
-
-    function removeCartItem(event) {
-        let buttonClicked = event.target;
-        buttonClicked.parentElement.parentElement.remove();
-        updateCartTotal();
-    }
-
-    function updateCartTotal() {
-        let cartItemContainer = document.querySelector('.cart__table');
-        let cartRows = cartItemContainer.querySelectorAll('.cart__product');
-        let total = 0;
-        cartRows.forEach(cartRow => {
-            let priceElement = cartRow.querySelector('.cart__item-price');
-            let quantityElement = cartRow.querySelector('.field-num__input');
-            let price = parseFloat(priceElement.innerText.replace('₽', '').replace(' ', ''));
-            let quantity = quantityElement.value;
-            total = total + (price * quantity);
-        })
-        document.querySelector('#cart-products-price-num').innerText = `${total} ₽`;
-    }
-
-
+    
     function init(books) {
         createCards(books);
         openPopup(books);
@@ -174,6 +110,8 @@ ready(function () {
         closePopup();
         toggleFiltersMenu();
         toggleMobileMenu();
+        addToCart(books);
+        addToCartFromPopup(books);
     }
 
     // ВНИМАНИЕ!
