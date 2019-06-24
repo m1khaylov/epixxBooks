@@ -1,2 +1,0 @@
-# epixxBooks
-The online bookstore
