@@ -176,3 +176,11 @@ function ready(fn) {
         document.addEventListener('DOMContentLoaded', fn);
     }
 }
+
+
+if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+  }
+   
+  localStorage.setItem('myFirstKey', 'myFirstValue');

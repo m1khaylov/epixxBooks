@@ -1,11 +1,44 @@
-let cart = [];
+let cart = [
+    {thumb_url: "/books/thumb/klienty-na-vsyu-zhizn",
+    name: "Клиенты на всю жизнь",
+    desc: "",
+    price: 69700,
+    id: "klienty-na-vsyu-zhizn",
+    type: "marketing"},
+
+    {thumb_url: "/books/thumb/tsennye-resheniya",
+    name: "Ценные решения",
+    desc:"Как работать с ценами, чтобы прибыль росла",
+    price:63700,
+    id:"tsennye-resheniya",
+    type:"marketing"},    
+];
 
 function select(selector) {
     return document.querySelector(selector);
 }
 
 
-console.log(document.querySelectorAll('.page-header__cart-num'));
+function createCartItems(cart) {
+    const cartTable = document.getElementsByTagName('tbody')[0];
+    const cartTotalPrice = document.querySelector('.cart-total-price');
+    const itemTemplate = select('.item-template');
+    const itemFragment = document.createDocumentFragment();
+
+    cart.forEach(item => {
+        const newItem = itemTemplate.content.cloneNode(true);
+        const imgSrc = item.thumb_url.substr(1);
+        newItem.querySelector('.cart__item-img').setAttribute('src', `${imgSrc}.jpg`);
+        newItem.querySelector('.cart__item-img').setAttribute('alt', item.name);
+        newItem.querySelector('.cart__item-name').textContent = item.name;
+        newItem.querySelector('.field-num__input').setAttribute('value', 1);
+        newItem.querySelector('.cart__item-price').textContent = `${item.price} ₽`;
+
+        itemFragment.appendChild(newItem);
+        cartTable.insertBefore(itemFragment, cartTotalPrice);
+    })
+}
+createCartItems(cart);
 
 function addToCart(books) {
     document.querySelectorAll('.card__buy').forEach(button => {
@@ -23,11 +56,14 @@ function addToCart(books) {
 function showCartTotal() {
     document.querySelectorAll('.page-header__cart-num').forEach(cartTotal => {
         cartTotal.textContent = cart.length;
-    }) 
+    })
+    document.querySelector('.cart__title').textContent = `В корзине ${cart.length} товара`;
 }
+showCartTotal();
+
 
 function addToCartFromPopup(books) {
-    document.querySelector('.btn--price').addEventListener('click', function () {
+    document.querySelector('.btn--price').addEventListener('click', function() {
         const id = this.getAttribute('data-id');
         const selectedBook = books.find(book => book.id === id);
         cart.push(selectedBook);
@@ -81,12 +117,6 @@ function increaseItemQuantity() {
 increaseItemQuantity();
 
 
-// select('.cart__clear-btn').addEventListener('click', function() {
-//     document.querySelectorAll('.cart__product').forEach(item => {
-//         this.remove();
-//     })
-// })
-
 function removeCartItem(event) {
     let buttonClicked = event.target;
     buttonClicked.parentElement.parentElement.remove();
@@ -105,25 +135,17 @@ function updateCartTotal() {
         total = total + (price * quantity);
     })
     document.querySelector('#cart-products-price-num').innerText = `${total} ₽`;
+    document.querySelector('.checkout__price').textContent = `${total} ₽`;
 }
+updateCartTotal();
 
-
-function createCartItems(cart) {
-    const cartTable = select('.cart__table');
-    const itemTemplate = select('.item-template');
-    const itemFragment = document.createDocumentFragment();
-
-    cart.forEach(item => {
-        const newItem = itemTemplate.content.cloneNode(true);
-        const imgSrc = item.thumb_url.substr(1);
-        newItem.querySelector('.cart__item-img').setAttribute('src', `${imgSrc}.jpg`);
-        newItem.querySelector('.cart__item-img').setAttribute('alt', item.name);
-        newItem.querySelector('.cart__item-name').textContent = item.name;
-        newItem.querySelector('.field-num__input').setAttribute('value', item.length);
-        newItem.querySelector('.cart__item-price').textContent = `${item.price} ₽`;
-
-        itemFragment.appendChild(newItem);
-        cartTable.appendChild(itemFragment);
+function removeAllItemsFromCart() {
+    document.querySelector('.cart__clear-btn').addEventListener('click', function(e) {
+        e.stopPropagation;
+        document.querySelectorAll('.cart__product').forEach(item => {
+            item.remove();
+            updateCartTotal();
+        })
     })
 }
-createCartItems(cart);
+removeAllItemsFromCart();
