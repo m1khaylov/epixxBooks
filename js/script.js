@@ -101,6 +101,39 @@ ready(function () {
             });
         });
     }
+    function showCartTotal() {
+        document.querySelectorAll('.page-header__cart-num').forEach(cartTotal => {
+            cartTotal.textContent = toCart.length;
+        })
+    }
+
+    let toCart = [];
+
+    function addToCart(books) {
+        document.querySelectorAll('.card__buy').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const selectedBook = books.find(book => book.id === id);
+                cart.push(selectedBook);
+                addToLS(cart);
+            });
+        });
+    }
+
+    function addToCartFromPopup(books) {
+        document.querySelector('.btn--price').addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const selectedBook = books.find(book => book.id === id);
+            toCart.push(selectedBook);
+            addToLS(toCart);
+            showCartTotal();
+        });
+    }
+
+function addToLS(obj) {
+    let serialObj = JSON.stringify(obj);
+    localStorage.setItem("cart", serialObj);
+}
 
     
     function init(books) {
@@ -182,5 +215,3 @@ if (typeof localStorage === "undefined" || localStorage === null) {
     var LocalStorage = require('node-localstorage').LocalStorage;
     localStorage = new LocalStorage('./scratch');
   }
-   
-  localStorage.setItem('myFirstKey', 'myFirstValue');

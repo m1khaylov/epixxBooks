@@ -1,28 +1,15 @@
-let cart = [
-    {thumb_url: "/books/thumb/klienty-na-vsyu-zhizn",
-    name: "Клиенты на всю жизнь",
-    desc: "",
-    price: 69700,
-    id: "klienty-na-vsyu-zhizn",
-    type: "marketing"},
 
-    {thumb_url: "/books/thumb/tsennye-resheniya",
-    name: "Ценные решения",
-    desc:"Как работать с ценами, чтобы прибыль росла",
-    price:63700,
-    id:"tsennye-resheniya",
-    type:"marketing"},    
-];
+const initialCart = JSON.parse(localStorage.getItem("cart"));
+const cart = initialCart;
 
 function select(selector) {
     return document.querySelector(selector);
 }
 
-
 function createCartItems(cart) {
     const cartTable = document.getElementsByTagName('tbody')[0];
     const cartTotalPrice = document.querySelector('.cart-total-price');
-    const itemTemplate = select('.item-template');
+    const itemTemplate = document.querySelector('.item-template');
     const itemFragment = document.createDocumentFragment();
 
     cart.forEach(item => {
@@ -38,39 +25,20 @@ function createCartItems(cart) {
         cartTable.insertBefore(itemFragment, cartTotalPrice);
     })
 }
-createCartItems(cart);
 
-function addToCart(books) {
-    document.querySelectorAll('.card__buy').forEach(button => {
-        button.addEventListener('click', function () {
-            const id = this.getAttribute('data-id');
-            const selectedBook = books.find(book => book.id === id);
-            cart.push(selectedBook);
-            console.log(cart);
-            showCartTotal();
-        });
-    });
-}
+
 
 
 function showCartTotal() {
     document.querySelectorAll('.page-header__cart-num').forEach(cartTotal => {
         cartTotal.textContent = cart.length;
-    })
-    document.querySelector('.cart__title').textContent = `В корзине ${cart.length} товара`;
-}
-showCartTotal();
-
-
-function addToCartFromPopup(books) {
-    document.querySelector('.btn--price').addEventListener('click', function() {
-        const id = this.getAttribute('data-id');
-        const selectedBook = books.find(book => book.id === id);
-        cart.push(selectedBook);
-        console.log(cart);
-        showCartTotal();
     });
+    document.querySelector('.cart__total').textContent = cart.length;
 }
+
+
+
+
 
 
 function removeCartItemButtons() {
@@ -83,7 +51,7 @@ function removeCartItemButtons() {
         input.addEventListener('change', quantityChanged);
     })
 }
-removeCartItemButtons();
+
 
 
 function quantityChanged(event) {
@@ -103,7 +71,7 @@ function decreaseItemQuantity() {
         })
     })
 }
-decreaseItemQuantity();
+
 
 function increaseItemQuantity() {
     let buttonPlus = document.querySelectorAll('.field-num__btn-plus');
@@ -114,7 +82,7 @@ function increaseItemQuantity() {
         })
     })
 }
-increaseItemQuantity();
+
 
 
 function removeCartItem(event) {
@@ -137,7 +105,7 @@ function updateCartTotal() {
     document.querySelector('#cart-products-price-num').innerText = `${total} ₽`;
     document.querySelector('.checkout__price').textContent = `${total} ₽`;
 }
-updateCartTotal();
+
 
 function removeAllItemsFromCart() {
     document.querySelector('.cart__clear-btn').addEventListener('click', function(e) {
@@ -147,5 +115,16 @@ function removeAllItemsFromCart() {
             updateCartTotal();
         })
     })
+    localStorage.clear();
 }
-removeAllItemsFromCart();
+
+
+if (cart) {
+    createCartItems(cart);
+    showCartTotal();
+    removeCartItemButtons();
+    decreaseItemQuantity();
+    increaseItemQuantity();
+    updateCartTotal();
+    removeAllItemsFromCart();
+}

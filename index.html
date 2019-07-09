@@ -79,7 +79,7 @@
       <div class="page__content">
         <header class="page-header" role="banner">
           <div class="page-header__inner">
-            <a class="logo" href="/">
+            <a class="logo" href="index.html">
               <strong>EPIC BOOKS</strong>
             </a>
             <nav class="main-nav page-header__nav" id="nav">
@@ -119,18 +119,18 @@
               <li class="tabs__item" data-id="business">
                 <a class="tabs__item-link" href="index.html">Бизнес</a>
               </li>
-              <li class="tabs__item">
+              <!-- <li class="tabs__item">
                 <a class="tabs__item-link" href="index.html">Проектирование</a>
-              </li>
+              </li> -->
               <li class="tabs__item" data-id="creativity">
                 <a class="tabs__item-link" href="index.html">Дизайн</a>
               </li>
-              <li class="tabs__item">
+              <!-- <li class="tabs__item">
                 <a class="tabs__item-link" href="index.html">Программирование</a>
               </li>
               <li class="tabs__item">
                 <a class="tabs__item-link" href="index.html">Психология</a>
-              </li>
+              </li> -->
             </ul>
           </div>
         </header>
@@ -178,7 +178,7 @@
                   <label class="field-text  field-text--sm">
                     <span class="field-text__name">Автор:</span>
                     <span class="field-text__input-wrap">
-                      <input class="field-text__input" type="text" value="Виктор Пелевин" name="author" placeholder="Введите автора"/>
+                      <input class="field-text__input" type="text" name="author" placeholder="Введите автора"/>
                     </span>
                   </label>
                   <label class="field-text  field-text--sm">
@@ -190,7 +190,7 @@
                   <label class="field-text  field-text--sm">
                     <span class="field-text__name">Издательство:</span>
                     <span class="field-text__input-wrap">
-                      <input class="field-text__input" type="text" value="МИФ" name="publisher" placeholder="" disabled="disabled"/>
+                      <input class="field-text__input" type="text" name="publisher" placeholder="МИФ"/>
                     </span>
                   </label>
                 </div>
@@ -283,8 +283,8 @@
                   <use xlink:href="#arrow-left"></use>
                 </svg>
               </a>
-              <a class="pagination__item" href="/1">1</a>
-              <span class="pagination__item  pagination__item--active">2</span>
+              <a class="pagination__item pagination__item--active" href="/1">1</a>
+              <a class="pagination__item" href="/2">2</a>
               <a class="pagination__item" href="/3">3</a>
               <span class="pagination__item">...</span>
               <a class="pagination__item" href="/6">6</a>
@@ -467,7 +467,6 @@
     <script src="js/choices.min.js"></script>
     <script src="js/nouislider.min.js"></script>
     <script src="js/script.js"></script>
-    <script src="js/cart.js"></script>
     <div class="modal__backdrop"></div>
   </body>
 </html>

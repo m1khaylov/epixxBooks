@@ -2,7 +2,7 @@
   "name": "epixxBooks",
   "version": "0.0.1",
   "scripts": {
-    "start": "http-server"
+    "start": "http-server -p 5528"
   },
   "dependencies": {
     "create-server": "^1.0.2",
