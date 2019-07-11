@@ -70,6 +70,7 @@ ready(function () {
             card.addEventListener('click', function (e) {
                 const bookId = this.getAttribute('data-id');
                 e.preventDefault();
+                e.stopPropagation();
                 createPopup(books, bookId);
             });
         });
@@ -114,14 +115,15 @@ ready(function () {
             button.addEventListener('click', function () {
                 const id = this.getAttribute('data-id');
                 const selectedBook = books.find(book => book.id === id);
-                cart.push(selectedBook);
-                addToLS(cart);
+                toCart.push(selectedBook);
+                addToLS(toCart);
+                showCartTotal();
             });
         });
     }
 
     function addToCartFromPopup(books) {
-        document.querySelector('.btn--price').addEventListener('click', function() {
+        document.querySelector('.btn--price').addEventListener('click', function () {
             const id = this.getAttribute('data-id');
             const selectedBook = books.find(book => book.id === id);
             toCart.push(selectedBook);
@@ -130,17 +132,27 @@ ready(function () {
         });
     }
 
-function addToLS(obj) {
-    let serialObj = JSON.stringify(obj);
-    localStorage.setItem("cart", serialObj);
-}
+    function addToLS(obj) {
+        let serialObj = JSON.stringify(obj);
+        localStorage.setItem("cart", serialObj);
+    }
 
-    
+    function closePopupByArea() {
+        document.addEventListener('click', function(event) {
+            let modal = document.querySelector('.modal');
+            if (event.target === modal) {
+                select('#modal-book-view').classList.remove('modal--open');
+                select('.page').classList.remove('js-modal-open');
+            }
+        })
+    }
+
     function init(books) {
         createCards(books);
         openPopup(books);
         bookFilter(books);
         closePopup();
+        closePopupByArea();
         toggleFiltersMenu();
         toggleMobileMenu();
         addToCart(books);
@@ -167,7 +179,7 @@ function addToLS(obj) {
                 item: (classNames, data) => {
                     return template(`
             <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}>
-              ${getLangInSelectIcon(data.value)} ${data.label.substr(0,3)}
+              ${getLangInSelectIcon(data.value)} ${data.label.substr(0, 3)}
             </div>
           `);
                 },
@@ -214,4 +226,4 @@ function ready(fn) {
 if (typeof localStorage === "undefined" || localStorage === null) {
     var LocalStorage = require('node-localstorage').LocalStorage;
     localStorage = new LocalStorage('./scratch');
-  }
+}

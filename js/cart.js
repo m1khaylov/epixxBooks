@@ -27,18 +27,12 @@ function createCartItems(cart) {
 }
 
 
-
-
 function showCartTotal() {
     document.querySelectorAll('.page-header__cart-num').forEach(cartTotal => {
         cartTotal.textContent = cart.length;
     });
     document.querySelector('.cart__total').textContent = cart.length;
 }
-
-
-
-
 
 
 function removeCartItemButtons() {
@@ -51,7 +45,6 @@ function removeCartItemButtons() {
         input.addEventListener('change', quantityChanged);
     })
 }
-
 
 
 function quantityChanged(event) {
@@ -82,7 +75,6 @@ function increaseItemQuantity() {
         })
     })
 }
-
 
 
 function removeCartItem(event) {
