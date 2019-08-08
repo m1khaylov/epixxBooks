@@ -63,6 +63,7 @@ function decreaseItemQuantity() {
             updateCartTotal();
         })
     })
+    showCartTotal();
 }
 
 
@@ -74,6 +75,7 @@ function increaseItemQuantity() {
             updateCartTotal();
         })
     })
+    showCartTotal();
 }
 
 
@@ -119,4 +121,56 @@ if (cart) {
     increaseItemQuantity();
     updateCartTotal();
     removeAllItemsFromCart();
+}
+
+
+// FORM
+const clientName = document.querySelector('#client-name');
+const clientSurname = document.querySelector('#client-surname');
+const clientPhone = document.querySelector('#client-phone');
+const clientEmail = document.querySelector('#client-email');
+
+const allInputs = document.querySelectorAll('.field-text__input');
+const regExp = /^[а-я][а-я-_\.]{1,20}$/gi;
+const regExpPhone = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/gi;
+const regExpEmail = /^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,3}$/gi;
+
+clientName.addEventListener('keyup', checkName);
+
+function checkName() {
+    if (clientName.value.match(regExp) === null) {
+        allInputs[0].style.border = 'solid 1px red';
+    } else {
+        allInputs[0].style.border = '1px solid #e5e5e5';
+    }
+}
+
+clientSurname.addEventListener('keyup', checkSurname);
+
+function checkSurname() {
+    if (clientSurname.value.match(regExp) === null) {
+        allInputs[1].style.border = 'solid 1px red';
+    } else {
+        allInputs[1].style.border = '1px solid #e5e5e5';
+    }
+}
+
+clientPhone.addEventListener('keyup', checkPhone);
+
+function checkPhone() {
+    if (clientPhone.value.match(regExpPhone) === null) {
+        allInputs[2].style.border = 'solid 1px red';
+    } else {
+        allInputs[2].style.border = '1px solid #e5e5e5';
+    }
+}
+
+clientEmail.addEventListener('keyup', checkEmail);
+
+function checkEmail() {
+    if (clientEmail.value.match(regExpEmail) === null) {
+        allInputs[3].style.border = 'solid 1px red';
+    } else {
+        allInputs[3].style.border = '1px solid #e5e5e5';
+    }
 }

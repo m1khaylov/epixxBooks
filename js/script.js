@@ -22,6 +22,9 @@ ready(function () {
         });
     }
 
+
+    /*Рендеринг карточек с книгами */
+
     function createCards(arr) {
         const catalog = select('.catalog__books-list');
         const cardTemplate = select('.card-template');
@@ -49,6 +52,9 @@ ready(function () {
             catalog.appendChild(cardFragment);
         })
     }
+
+
+    /* ПОПАП */
 
     function createPopup(books, bookId) {
         const selectedBook = books.find(book => book.id === bookId);
@@ -85,6 +91,19 @@ ready(function () {
     }
 
 
+    function closePopupByArea() {
+        document.addEventListener('click', function(event) {
+            let modal = document.querySelector('.modal');
+            if (event.target === modal) {
+                select('#modal-book-view').classList.remove('modal--open');
+                select('.page').classList.remove('js-modal-open');
+            }
+        })
+    }
+
+
+    /* ФИЛЬТРЫ */
+
     function getFilteredBooks(type, books) {
         return books.filter(book => book.type === type);
     }
@@ -102,11 +121,17 @@ ready(function () {
             });
         });
     }
-    function showCartTotal() {
-        document.querySelectorAll('.page-header__cart-num').forEach(cartTotal => {
-            cartTotal.textContent = toCart.length;
-        })
-    }
+
+    let buttonShow = document.querySelector('#books-show-btn');
+    let input = document.querySelector('.field-text__name');
+    console.log(input.value);
+    console.log(buttonShow);
+    buttonShow.addEventListener('click', function() {
+        console.log(input.value);
+    })
+
+
+    /* КОРЗИНА */
 
     let toCart = [];
 
@@ -129,6 +154,7 @@ ready(function () {
             toCart.push(selectedBook);
             addToLS(toCart);
             showCartTotal();
+            document.location.href = 'cart.html';
         });
     }
 
@@ -137,15 +163,12 @@ ready(function () {
         localStorage.setItem("cart", serialObj);
     }
 
-    function closePopupByArea() {
-        document.addEventListener('click', function(event) {
-            let modal = document.querySelector('.modal');
-            if (event.target === modal) {
-                select('#modal-book-view').classList.remove('modal--open');
-                select('.page').classList.remove('js-modal-open');
-            }
+    function showCartTotal() {
+        document.querySelectorAll('.page-header__cart-num').forEach(cartTotal => {
+            cartTotal.textContent = toCart.length;
         })
     }
+
 
     function init(books) {
         createCards(books);
